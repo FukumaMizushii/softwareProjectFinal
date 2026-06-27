@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Book Form')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4" style="max-width: 700px;">
+    <h3 th:text="${editMode} ? 'Edit Book' : 'Add New Book'">Book Form</h3>
+
+    <!-- The action URL differs for add vs edit. enctype required for file upload. -->
+    <form th:action="${editMode}
+                     ? @{/admin/books/edit/{id}(id=${bookDto.id})}
+                     : @{/admin/books/add}"
+          th:object="${bookDto}" method="post" enctype="multipart/form-data"
+          class="card p-4 mt-3 bg-white shadow-sm">
+
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" th:field="*{title}" class="form-control">
+            <div class="text-danger small" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Author</label>
+            <input type="text" th:field="*{author}" class="form-control">
+            <div class="text-danger small" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Price</label>
+                <input type="number" step="0.01" th:field="*{price}" class="form-control">
+                <div class="text-danger small" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Category</label>
+                <select th:field="*{categoryId}" class="form-select">
+                    <option value="">-- Select --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}" th:text="${cat.categoryName}">Cat</option>
+                </select>
+                <div class="text-danger small" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+            </div>
+        </div>
+
+        <!-- Keep existing file paths across an edit if no new upload -->
+        <input type="hidden" th:field="*{existingFilePath}">
+        <input type="hidden" th:field="*{existingCoverImagePath}">
+
+        <div class="mb-3">
+            <label class="form-label">Book File (PDF)</label>
+            <input type="file" name="bookFile" accept="application/pdf" class="form-control">
+            <small class="text-muted" th:if="${editMode}">Leave empty to keep the current file.</small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Cover Image</label>
+            <input type="file" name="coverImage" accept="image/*" class="form-control">
+            <small class="text-muted" th:if="${editMode}">Leave empty to keep the current cover.</small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a th:href="@{/admin/books}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

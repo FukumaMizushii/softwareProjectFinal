@@ -1,0 +1,58 @@
+/* ===== E-book Management System custom styles ===== */
+
+body {
+    background-color: #f5f7fa;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.book-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    height: 100%;
+}
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.book-cover {
+    height: 220px;
+    object-fit: cover;
+    background-color: #e9ecef;
+}
+
+.book-cover-placeholder {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: #fff;
+    font-size: 3rem;
+}
+
+.hero {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: #fff;
+    padding: 4rem 1rem;
+    border-radius: 0 0 1rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-stat {
+    border-radius: 1rem;
+    color: #fff;
+}
+.stat-books { background: linear-gradient(135deg, #11998e, #38ef7d); }
+.stat-categories { background: linear-gradient(135deg, #fc4a1a, #f7b733); }
+.stat-users { background: linear-gradient(135deg, #2193b0, #6dd5ed); }
+
+.footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+}

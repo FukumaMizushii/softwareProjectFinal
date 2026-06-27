@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{fragments/layout :: commonHead('Home - E-book System')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <!-- Hero banner -->
+    <div class="hero text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Your Digital Library</h1>
+            <p class="lead">Search, read, and download e-books anytime, anywhere.</p>
+            <form class="row justify-content-center mt-4" th:action="@{/books/search}" method="get">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="search" name="keyword" class="form-control form-control-lg"
+                            placeholder="Search by title or author...">
+                        <button class="btn btn-light btn-lg" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- Category filter chips -->
+        <div class="mb-4">
+            <h5>Categories</h5>
+            <a th:href="@{/books}" class="btn btn-sm btn-outline-secondary mb-1">All</a>
+            <a th:each="cat : ${categories}" th:href="@{/books(categoryId=${cat.id})}" th:text="${cat.categoryName}"
+                class="btn btn-sm btn-outline-primary mb-1">Category</a>
+        </div>
+
+        <h4 class="mb-3">Latest Books</h4>
+
+        <!-- Empty state -->
+        <div th:if="${#lists.isEmpty(books)}" class="alert alert-info">
+            No books available yet. Please check back later.
+        </div>
+
+        <!-- Book grid -->
+        <div class="row g-4">
+            <div class="col-sm-6 col-md-4 col-lg-3" th:each="book : ${books}">
+                <div th:replace="~{books/book-card :: card(${book})}"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

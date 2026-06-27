@@ -71,6 +71,12 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public Resource loadAsResource(String relativePath) {
+
+
+        if (relativePath == null || relativePath.isBlank()) {
+            throw new FileStorageException("File path is not specified");
+        }
+
         try {
             Path file = rootLocation.resolve(relativePath).normalize();
             if (!file.startsWith(rootLocation)) {

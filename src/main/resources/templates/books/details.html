@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{fragments/layout :: commonHead('Book Details')}"></head>
+
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Cover -->
+            <div class="col-md-4 mb-3">
+                <img th:if="${book.coverImagePath != null}"
+                    th:src="@{/covers/{name}(name=${#strings.replace(book.coverImagePath,'covers/','')})}"
+                    class="img-fluid rounded shadow" alt="cover">
+                <div th:unless="${book.coverImagePath != null}" class="book-cover-placeholder rounded"
+                    style="height:320px;">
+                    <i class="bi bi-book"></i>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="col-md-8">
+                <h2 th:text="${book.title}">Title</h2>
+                <h5 class="text-muted" th:text="'by ' + ${book.author}">Author</h5>
+                <span th:if="${book.category != null}" class="badge bg-secondary"
+                    th:text="${book.category.categoryName}">Category</span>
+                <p class="fs-4 fw-bold text-primary mt-2" th:text="${book.price != null ? '$' + book.price : 'Free'}">$0
+                </p>
+
+                <p th:text="${book.description}">Description</p>
+
+                <!-- Actions: only for logged-in users -->
+                <div sec:authorize="isAuthenticated()" class="mt-4">
+                    <a th:if="${book.filePath != null}" th:href="@{/books/read/{id}(id=${book.id})}" target="_blank"
+                        class="btn btn-success">
+                        <i class="bi bi-eye"></i> Read Online
+                    </a>
+                    <a th:if="${book.filePath != null}" th:href="@{/books/download/{id}(id=${book.id})}"
+                        class="btn btn-primary">
+                        <i class="bi bi-download"></i> Download
+                    </a>
+
+                    <!-- Add / remove from collection -->
+                    <form th:unless="${inCollection}" class="d-inline"
+                        th:action="@{/collection/add/{id}(id=${book.id})}" method="post">
+                        <button class="btn btn-outline-danger" type="submit">
+                            <i class="bi bi-heart"></i> Add to Collection
+                        </button>
+                    </form>
+                    <form th:if="${inCollection}" class="d-inline" th:action="@{/collection/remove/{id}(id=${book.id})}"
+                        method="post">
+                        <button class="btn btn-danger" type="submit">
+                            <i class="bi bi-heart-fill"></i> Remove from Collection
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Prompt to log in -->
+                <div sec:authorize="!isAuthenticated()" class="alert alert-info mt-4">
+                    Please <a th:href="@{/login}">log in</a> to read, download, or save this book.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

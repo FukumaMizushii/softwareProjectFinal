@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: commonHead('Books - E-book System')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mt-4">
+
+    <!-- Heading changes if this is a search result -->
+    <h3 th:if="${keyword != null}"
+        th:text="'Search results for: ' + ${keyword}">Search results</h3>
+    <h3 th:unless="${keyword != null}">All Books</h3>
+
+    <!-- Category filter chips -->
+    <div class="my-3">
+        <a th:href="@{/books}" class="btn btn-sm btn-outline-secondary mb-1">All</a>
+        <a th:each="cat : ${categories}"
+           th:href="@{/books(categoryId=${cat.id})}"
+           th:text="${cat.categoryName}"
+           class="btn btn-sm btn-outline-primary mb-1">Category</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(books)}" class="alert alert-warning">
+        No books found.
+    </div>
+
+    <div class="row g-4">
+        <div class="col-sm-6 col-md-4 col-lg-3" th:each="book : ${books}">
+            <div th:replace="~{books/book-card :: card(${book})}"></div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

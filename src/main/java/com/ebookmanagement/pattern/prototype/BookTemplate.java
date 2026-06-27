@@ -1,6 +1,21 @@
 package com.ebookmanagement.pattern.prototype;
 
-
+/**
+ * ============================================================
+ * DESIGN PATTERN: PROTOTYPE
+ * ============================================================
+ * A BookTemplate is a "master copy" of common book settings.
+ * Instead of typing the same description/price/category every
+ * time an admin adds a similar book, we keep ready-made
+ * templates and CLONE them, then tweak the small differences
+ * (like the title).
+ *
+ * This implements Prototype because:
+ *  - It declares a clone() operation (via Cloneable + copy()).
+ *  - Concrete templates are copied rather than rebuilt from scratch.
+ *  - The client copies a prototype and changes only what differs.
+ * ============================================================
+ */
 public class BookTemplate implements Cloneable {
 
     private String title;
@@ -21,18 +36,23 @@ public class BookTemplate implements Cloneable {
         this.categoryId = categoryId;
     }
 
-
+    /**
+     * Returns a copy of this template. This is the heart of the
+     * Prototype pattern: we duplicate an existing object instead
+     * of constructing a brand new one field-by-field.
+     */
     public BookTemplate copy() {
         try {
-
+            // BookTemplate only holds immutable fields (String, Double, Long),
+            // so a shallow clone is a correct, complete copy here.
             return (BookTemplate) super.clone();
         } catch (CloneNotSupportedException e) {
-
+            // Cannot happen because we implement Cloneable, but handle defensively.
             throw new IllegalStateException("Cloning a BookTemplate failed", e);
         }
     }
 
-
+    // ---- getters / setters ----
 
     public String getTitle() {
         return title;

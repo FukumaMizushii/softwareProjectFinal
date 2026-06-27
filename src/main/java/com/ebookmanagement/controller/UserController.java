@@ -41,36 +41,36 @@ public class UserController {
         model.addAttribute("currentUser", userService.findByEmail(auth.getName()));
         model.addAttribute("collectionCount",
                 collectionService.getUserCollection(auth.getName()).size());
-        model.addAttribute("canUndo", commandInvoker.hasHistory(auth.getName()));
+        model.addAttribute("canUndo", commandInvoker.hasHistory());
         return "user/dashboard";
     }
 
     @GetMapping("/collection")
     public String myCollection(Authentication auth, Model model) {
         model.addAttribute("books", collectionService.getUserCollection(auth.getName()));
-        model.addAttribute("canUndo", commandInvoker.hasHistory(auth.getName()));
+        model.addAttribute("canUndo", commandInvoker.hasHistory());
         return "user/collection";
     }
 
     @PostMapping("/collection/add/{bookId}")
     public String addToCollection(@PathVariable Long bookId, Authentication auth) {
         // COMMAND pattern: wrap the action, then let the invoker run it.
-        commandInvoker.run(auth.getName(),
+        commandInvoker.run(
                 new AddToCollectionCommand(collectionService, auth.getName(), bookId));
         return "redirect:/books/" + bookId;
     }
 
     @PostMapping("/collection/remove/{bookId}")
     public String removeFromCollection(@PathVariable Long bookId, Authentication auth) {
-        commandInvoker.run(auth.getName(),
+        commandInvoker.run(
                 new RemoveFromCollectionCommand(collectionService, auth.getName(), bookId));
         return "redirect:/collection";
     }
 
     /** Undo the most recent collection change (COMMAND pattern undo). */
     @PostMapping("/collection/undo")
-    public String undoLast(Authentication auth) {
-        commandInvoker.undoLast(auth.getName());
+    public String undoLast() {
+        commandInvoker.undoLast();
         return "redirect:/collection";
     }
 }

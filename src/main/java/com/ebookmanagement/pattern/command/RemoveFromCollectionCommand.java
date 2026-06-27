@@ -2,7 +2,12 @@ package com.ebookmanagement.pattern.command;
 
 import com.ebookmanagement.service.CollectionService;
 
-
+/**
+ * DESIGN PATTERN: COMMAND (concrete command)
+ *
+ * Packages the "remove this book from my collection" request.
+ * undo() re-adds the book, reversing the removal.
+ */
 public class RemoveFromCollectionCommand implements Command {
 
     private final CollectionService collectionService; // the Receiver

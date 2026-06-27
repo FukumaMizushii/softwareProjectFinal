@@ -73,9 +73,6 @@ public class AdminBookController {
     public String addBook(@Valid @ModelAttribute("bookDto") BookDto bookDto,
                           BindingResult result,
                           Model model) {
-        if (bookDto.getBookFile() == null || bookDto.getBookFile().isEmpty()) {
-            result.rejectValue("bookFile", "required", "Book file (PDF) is required for new books");
-        }
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.findAll());
             return "admin/book-form";

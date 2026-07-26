@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: commonHead('Register - BookVault')}"></head>
-<body>
+<body class="register-page-body">
+
+<!-- Full-page photo background -->
+<div class="register-bg-photo"></div>
+
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="auth-page">
-    <div class="auth-glass" style="max-width:960px;">
+<div class="auth-page register-auth-page">
+    <div class="auth-glass register-glass" style="max-width:960px;">
         <div class="row g-0" style="min-height:580px;">
 
             <!-- Decorative left panel -->
-            <div class="col-md-4 auth-panel-left d-none d-md-flex">
+            <div class="col-md-4 auth-panel-left d-none d-md-flex register-left-panel">
                 <div>
                     <i class="bi bi-person-plus-fill auth-icon"></i>
                     <h2>Join BookVault</h2>
                     <p>Create your free account and unlock a world of knowledge. Read, download, and curate your own digital shelf.</p>
 
-                    <div class="mt-4 p-3" style="background:rgba(255,255,255,0.06); border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
-                        <p style="color:rgba(226,232,240,0.6); font-size:0.82rem; margin:0;">
+                    <div class="mt-4 p-3" style="background:rgba(255,255,255,0.07); border-radius:12px; border:1px solid rgba(255,255,255,0.10);">
+                        <p style="color:rgba(226,232,240,0.7); font-size:0.82rem; margin:0;">
                             <i class="bi bi-shield-check me-2" style="color:#10b981;"></i>
                             Your data is safe &amp; secure. We never share your information.
                         </p>
+                    </div>
+
+                    <!-- Extra decorative library quote -->
+                    <div class="mt-4" style="border-left:3px solid rgba(167,139,250,0.5); padding-left:1rem;">
+                        <p style="color:rgba(226,232,240,0.55); font-size:0.82rem; font-style:italic; margin:0;">
+                            "A reader lives a thousand lives before he dies."
+                        </p>
+                        <small style="color:rgba(167,139,250,0.7); font-size:0.75rem;">— George R.R. Martin</small>
                     </div>
                 </div>
             </div>
 
             <!-- Register form panel -->
-            <div class="col-md-8 auth-panel-right">
+            <div class="col-md-8 auth-panel-right register-right-panel">
                 <h3>Create Account</h3>
                 <p class="subtitle">Fill in your details to get started</p>
 
@@ -66,7 +78,6 @@
                                     <i class="bi bi-eye" id="toggleRegIcon"></i>
                                 </button>
                             </div>
-                            <!-- Password strength indicator -->
                             <div class="password-strength mt-1">
                                 <div class="password-strength-bar strength-0" id="pwdStrengthBar"></div>
                             </div>
@@ -111,7 +122,6 @@
 <footer th:replace="~{fragments/layout :: footer}"></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Password strength checker
     function checkPasswordStrength(pwd) {
         var bar = document.getElementById('pwdStrengthBar');
         var label = document.getElementById('pwdStrengthLabel');
@@ -120,13 +130,11 @@
         if (pwd.length >= 10) score++;
         if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score++;
         if (/[0-9]/.test(pwd) && /[^A-Za-z0-9]/.test(pwd)) score++;
-
         bar.className = 'password-strength-bar strength-' + score;
         var labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
         label.textContent = pwd.length > 0 ? labels[score] : '';
     }
 
-    // Toggle password visibility - register
     document.getElementById('toggleRegPwd').addEventListener('click', function() {
         var pwd = document.getElementById('regPassword');
         var icon = document.getElementById('toggleRegIcon');
@@ -139,5 +147,84 @@
         }
     });
 </script>
+
+<style>
+    /* ── Register-page specific overrides ── */
+
+    .register-page-body {
+        background: #0a0a1e !important;
+    }
+
+    /* Full-viewport fixed photo layer */
+    .register-bg-photo {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background-image: url('/images/register-bg.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        /* The gothic hall is already quite dark — lighten the filter slightly
+           so the dramatic symmetry is visible behind the glass card */
+        filter: brightness(0.38) saturate(0.85);
+    }
+
+    /* Colour-tinted vignette overlay */
+    .register-bg-photo::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 80% 60% at 50% 0%,
+                rgba(124, 58, 237, 0.20) 0%,
+                transparent 70%),
+            linear-gradient(to bottom,
+                rgba(5, 5, 18, 0.20) 0%,
+                rgba(5, 5, 18, 0.55) 100%);
+    }
+
+    /* Stacking order */
+    .navbar { position: relative; z-index: 10; }
+
+    .register-auth-page {
+        position: relative;
+        z-index: 5;
+        min-height: calc(100vh - 70px);
+    }
+
+    /* Glass card — heavier blur to stand out from detailed hall background */
+    .register-glass {
+        background: rgba(8, 8, 24, 0.70) !important;
+        backdrop-filter: blur(36px) !important;
+        -webkit-backdrop-filter: blur(36px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.11) !important;
+        box-shadow:
+            0 32px 80px rgba(0, 0, 0, 0.75),
+            0 0 0 1px rgba(124, 58, 237, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Left panel — warm amber/purple tones to complement the wooden shelves */
+    .register-left-panel {
+        background: linear-gradient(
+            145deg,
+            rgba(120, 53, 15, 0.30) 0%,
+            rgba(124, 58, 237, 0.20) 60%,
+            rgba(59, 130, 246, 0.12) 100%
+        ) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    /* Right form panel */
+    .register-right-panel {
+        background: rgba(5, 5, 18, 0.50);
+    }
+
+    .footer {
+        position: relative;
+        z-index: 5;
+        background: rgba(5, 5, 15, 0.85) !important;
+    }
+</style>
 </body>
 </html>

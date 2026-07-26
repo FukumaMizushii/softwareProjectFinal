@@ -222,7 +222,38 @@ a:hover { color: #93c5fd; }
   text-align: center;
 }
 
-.hero::before {
+/* ---- Library photo background variant ---- */
+.hero-photo {
+  background-image: url('/images/library-bg.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+}
+
+/* Dark cinematic overlay: bottom-heavy gradient so bottom doesn't bleed */
+.hero-photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(5, 5, 20, 0.72) 0%,
+      rgba(10, 10, 35, 0.60) 40%,
+      rgba(5, 5, 20, 0.88) 100%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.30) 0%,
+      rgba(59, 130, 246, 0.15) 60%,
+      transparent 100%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Stars / particles (keep for non-photo hero, hidden on photo hero) */
+.hero:not(.hero-photo)::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -232,7 +263,6 @@ a:hover { color: #93c5fd; }
   pointer-events: none;
 }
 
-/* Stars / particles */
 .hero::after {
   content: '';
   position: absolute;
@@ -250,7 +280,11 @@ a:hover { color: #93c5fd; }
     radial-gradient(1.5px 1.5px at 5% 40%, rgba(255,255,255,.3) 0%, transparent 100%);
   pointer-events: none;
   animation: starFloat 8s ease-in-out infinite alternate;
+  z-index: 0;
 }
+
+/* On the photo hero, suppress the synthetic stars (real bokeh is better) */
+.hero-photo::after { display: none; }
 
 @keyframes starFloat {
   from { transform: translateY(0); }
@@ -270,14 +304,17 @@ a:hover { color: #93c5fd; }
   margin-bottom: 1rem;
   line-height: 1.15;
   animation: fadeSlideUp 0.8s var(--ease-out) both;
+  /* Text shadow keeps readability over busy image */
+  filter: drop-shadow(0 2px 16px rgba(0,0,0,0.6));
 }
 
 .hero p.lead {
-  color: rgba(226,232,240,0.75);
+  color: rgba(226,232,240,0.88);
   font-size: 1.15rem;
   max-width: 540px;
   margin: 0 auto 2rem;
   animation: fadeSlideUp 0.8s var(--ease-out) 0.15s both;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
 /* Hero search */
@@ -287,7 +324,31 @@ a:hover { color: #93c5fd; }
   animation: fadeSlideUp 0.8s var(--ease-out) 0.3s both;
 }
 
-.hero .input-group .form-control {
+/* Frosted-glass search on photo hero */
+.hero-search-group .form-control {
+  background: rgba(10, 10, 30, 0.55) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.20) !important;
+  border-right: none !important;
+  color: var(--clr-text) !important;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius-full) 0 0 var(--radius-full);
+  transition: all 0.25s;
+}
+
+.hero-search-group .form-control:focus {
+  background: rgba(10, 10, 30, 0.70) !important;
+  border-color: var(--clr-accent-1) !important;
+  box-shadow: 0 0 0 3px var(--clr-accent-glow) !important;
+  color: var(--clr-text) !important;
+  outline: none;
+}
+
+.hero-search-group .form-control::placeholder { color: rgba(148,163,184,0.75) !important; }
+
+.hero .form-control {
   background: rgba(255,255,255,0.09);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -300,7 +361,7 @@ a:hover { color: #93c5fd; }
   transition: all 0.25s;
 }
 
-.hero .input-group .form-control:focus {
+.hero .form-control:focus {
   background: rgba(255,255,255,0.13);
   border-color: var(--clr-accent-1);
   box-shadow: 0 0 0 3px var(--clr-accent-glow);
@@ -308,7 +369,7 @@ a:hover { color: #93c5fd; }
   outline: none;
 }
 
-.hero .input-group .form-control::placeholder { color: rgba(148,163,184,0.7); }
+.hero .form-control::placeholder { color: rgba(148,163,184,0.7); }
 
 .hero .btn-search {
   background: linear-gradient(135deg, var(--clr-accent-1), var(--clr-accent-3));
@@ -325,6 +386,7 @@ a:hover { color: #93c5fd; }
   box-shadow: var(--shadow-glow);
   filter: brightness(1.1);
 }
+
 
 /* ============================================================
    CATEGORY CHIPS

@@ -7,9 +7,10 @@
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
     <!-- ============================================================
-         HERO BANNER
+         HERO BANNER — library photo background
          ============================================================ -->
-    <div class="hero">
+    <div class="hero hero-photo">
+        <!-- Photo background + overlays are applied via CSS class .hero-photo -->
         <div class="container">
             <h1 class="display-5 fw-bold">Your Digital Library</h1>
             <p class="lead">Search, read, and download e-books anytime, anywhere — for free.</p>
@@ -17,7 +18,7 @@
             <!-- Hero Search -->
             <form class="row justify-content-center mt-4" th:action="@{/books/search}" method="get">
                 <div class="col-md-7 col-lg-6">
-                    <div class="input-group input-group-lg">
+                    <div class="input-group input-group-lg hero-search-group">
                         <input type="search" name="keyword" id="heroSearch" class="form-control"
                                placeholder="Search by title or author...">
                         <button class="btn btn-search" type="submit" id="heroSearchBtn">
@@ -31,17 +32,17 @@
             <div class="d-flex justify-content-center gap-4 mt-4 animate-fade-up-4">
                 <div class="text-center">
                     <div style="font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; background:linear-gradient(135deg,#a78bfa,#60a5fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">∞</div>
-                    <small style="color:rgba(226,232,240,0.55); font-size:0.75rem;">Books Available</small>
+                    <small style="color:rgba(226,232,240,0.7); font-size:0.75rem;">Books Available</small>
                 </div>
-                <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+                <div style="width:1px; background:rgba(255,255,255,0.2);"></div>
                 <div class="text-center">
                     <div style="font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; background:linear-gradient(135deg,#34d399,#60a5fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">PDF</div>
-                    <small style="color:rgba(226,232,240,0.55); font-size:0.75rem;">Online Reading</small>
+                    <small style="color:rgba(226,232,240,0.7); font-size:0.75rem;">Online Reading</small>
                 </div>
-                <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+                <div style="width:1px; background:rgba(255,255,255,0.2);"></div>
                 <div class="text-center">
                     <div style="font-size:1.5rem; font-weight:800; font-family:'Outfit',sans-serif; background:linear-gradient(135deg,#f472b6,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;"><i class="bi bi-heart-fill" style="font-size:1.1rem;"></i></div>
-                    <small style="color:rgba(226,232,240,0.55); font-size:0.75rem;">Personal Collection</small>
+                    <small style="color:rgba(226,232,240,0.7); font-size:0.75rem;">Personal Collection</small>
                 </div>
             </div>
         </div>

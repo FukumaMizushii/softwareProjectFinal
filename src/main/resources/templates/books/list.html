@@ -1,37 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: commonHead('Books - E-book System')}"></head>
+<head th:replace="~{fragments/layout :: commonHead('Browse Books - BookVault')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container mt-4">
+<!-- Page header -->
+<div style="padding: 2.5rem 0 1rem; background: linear-gradient(180deg, rgba(124,58,237,0.06) 0%, transparent 100%);">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
+            <div>
+                <h2 class="section-heading mb-1" th:if="${keyword != null}"
+                    th:text="'Results for: &quot;' + ${keyword} + '&quot;'">Search results</h2>
+                <h2 class="section-heading mb-1" th:unless="${keyword != null}">All Books</h2>
+                <p class="text-muted small mb-0" th:unless="${#lists.isEmpty(books)}"
+                   th:text="${books.size()} + ' book(s) found'"></p>
+            </div>
 
-    <!-- Heading changes if this is a search result -->
-    <h3 th:if="${keyword != null}"
-        th:text="'Search results for: ' + ${keyword}">Search results</h3>
-    <h3 th:unless="${keyword != null}">All Books</h3>
+            <!-- Inline search -->
+            <form th:action="@{/books/search}" method="get" class="d-flex gap-2">
+                <input class="form-control form-control-sm" type="search" name="keyword"
+                       id="listSearchInput"
+                       th:value="${keyword}" placeholder="Search title or author...">
+                <button class="btn btn-primary btn-sm" type="submit" id="listSearchBtn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-3">
 
     <!-- Category filter chips -->
-    <div class="my-3">
-        <a th:href="@{/books}" class="btn btn-sm btn-outline-secondary mb-1">All</a>
+    <div class="category-chips mb-4">
+        <a th:href="@{/books}" class="chip chip-all">
+            <i class="bi bi-grid me-1"></i> All
+        </a>
         <a th:each="cat : ${categories}"
            th:href="@{/books(categoryId=${cat.id})}"
            th:text="${cat.categoryName}"
-           class="btn btn-sm btn-outline-primary mb-1">Category</a>
+           class="chip">Category</a>
     </div>
 
-    <div th:if="${#lists.isEmpty(books)}" class="alert alert-warning">
-        No books found.
+    <!-- Empty state -->
+    <div th:if="${#lists.isEmpty(books)}" class="empty-state">
+        <i class="bi bi-search"></i>
+        <h5>No books found</h5>
+        <p th:if="${keyword != null}" th:text="'No results for &quot;' + ${keyword} + '&quot;. Try a different search term.'">No results.</p>
+        <p th:unless="${keyword != null}">No books in this category yet. Browse all books or try another category.</p>
+        <a th:href="@{/books}" class="btn btn-outline-primary mt-2">Browse All Books</a>
     </div>
 
+    <!-- Book grid -->
     <div class="row g-4">
         <div class="col-sm-6 col-md-4 col-lg-3" th:each="book : ${books}">
             <div th:replace="~{books/book-card :: card(${book})}"></div>
         </div>
     </div>
+
+    <div class="mt-4 mb-2" th:unless="${#lists.isEmpty(books)}">
+        <p class="text-muted small text-center" th:text="'Showing ' + ${books.size()} + ' book(s)'"></p>
+    </div>
 </div>
 
 <footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scrollTop}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

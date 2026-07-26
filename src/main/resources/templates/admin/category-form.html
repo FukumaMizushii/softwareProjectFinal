@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: commonHead('Category Form')}"></head>
+<head th:replace="~{fragments/layout :: commonHead('Category Form - BookVault')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container mt-4" style="max-width: 600px;">
-    <h3 th:text="${editMode} ? 'Edit Category' : 'Add Category'">Category Form</h3>
+<div class="container mt-4 mb-5" style="max-width: 620px;">
+
+    <div class="d-flex align-items-center gap-3 mb-4 animate-fade-up">
+        <a th:href="@{/admin/categories}" class="btn btn-secondary btn-sm" id="cancelTopCatBtn">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h3 class="mb-0" th:text="${editMode} ? 'Edit Category' : 'Add Category'">Category Form</h3>
+            <p style="color:var(--clr-text-muted); font-size:0.85rem; margin:0;">
+                Organise your library collection
+            </p>
+        </div>
+    </div>
 
     <form th:action="${editMode}
                      ? @{/admin/categories/edit/{id}(id=${categoryDto.id})}
                      : @{/admin/categories/add}"
           th:object="${categoryDto}" method="post"
-          class="card p-4 mt-3 bg-white shadow-sm">
+          class="card p-4 animate-fade-up-1" id="categoryFormEl">
 
         <div class="mb-3">
-            <label class="form-label">Category Name</label>
-            <input type="text" th:field="*{categoryName}" class="form-control">
-            <div class="text-danger small" th:if="${#fields.hasErrors('categoryName')}"
+            <label class="form-label" for="catName">
+                <i class="bi bi-tag me-1"></i>Category Name
+            </label>
+            <input type="text" th:field="*{categoryName}" id="catName" class="form-control"
+                   placeholder="e.g. Science Fiction">
+            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('categoryName')}"
                  th:errors="*{categoryName}"></div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+
+        <div class="mb-4">
+            <label class="form-label" for="catDescription">
+                <i class="bi bi-text-paragraph me-1"></i>Description
+                <span style="color:var(--clr-text-muted); font-size:0.78rem;">(optional)</span>
+            </label>
+            <textarea th:field="*{description}" id="catDescription" class="form-control" rows="3"
+                      placeholder="A short description of this category..."></textarea>
         </div>
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a th:href="@{/admin/categories}" class="btn btn-secondary">Cancel</a>
+
+        <div class="d-flex gap-2 pt-2" style="border-top:1px solid rgba(255,255,255,0.07);">
+            <button type="submit" class="btn btn-primary" id="saveCategoryBtn">
+                <i class="bi bi-check-lg me-2"></i>Save Category
+            </button>
+            <a th:href="@{/admin/categories}" class="btn btn-secondary" id="cancelCategoryBtn">
+                <i class="bi bi-x-lg me-2"></i>Cancel
+            </a>
         </div>
     </form>
 </div>

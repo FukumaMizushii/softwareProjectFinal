@@ -1,54 +1,143 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: commonHead('Register')}"></head>
+<head th:replace="~{fragments/layout :: commonHead('Register - BookVault')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container mt-5" style="max-width: 520px;">
-    <div class="card shadow-sm">
-        <div class="card-body p-4">
-            <h3 class="text-center mb-4">Create an Account</h3>
+<div class="auth-page">
+    <div class="auth-glass" style="max-width:960px;">
+        <div class="row g-0" style="min-height:580px;">
 
-            <div th:if="${registerError}" class="alert alert-danger" th:text="${registerError}"></div>
+            <!-- Decorative left panel -->
+            <div class="col-md-4 auth-panel-left d-none d-md-flex">
+                <div>
+                    <i class="bi bi-person-plus-fill auth-icon"></i>
+                    <h2>Join BookVault</h2>
+                    <p>Create your free account and unlock a world of knowledge. Read, download, and curate your own digital shelf.</p>
 
-            <form th:action="@{/register}" th:object="${user}" method="post">
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" th:field="*{name}" class="form-control">
-                    <div class="text-danger small" th:if="${#fields.hasErrors('name')}"
-                         th:errors="*{name}"></div>
+                    <div class="mt-4 p-3" style="background:rgba(255,255,255,0.06); border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
+                        <p style="color:rgba(226,232,240,0.6); font-size:0.82rem; margin:0;">
+                            <i class="bi bi-shield-check me-2" style="color:#10b981;"></i>
+                            Your data is safe &amp; secure. We never share your information.
+                        </p>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" th:field="*{email}" class="form-control">
-                    <div class="text-danger small" th:if="${#fields.hasErrors('email')}"
-                         th:errors="*{email}"></div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" th:field="*{password}" class="form-control">
-                    <div class="text-danger small" th:if="${#fields.hasErrors('password')}"
-                         th:errors="*{password}"></div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Phone</label>
-                    <input type="text" th:field="*{phone}" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Address</label>
-                    <textarea th:field="*{address}" class="form-control" rows="2"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Register</button>
-            </form>
+            </div>
 
-            <p class="text-center mt-3 mb-0">
-                Already have an account? <a th:href="@{/login}">Login</a>
-            </p>
+            <!-- Register form panel -->
+            <div class="col-md-8 auth-panel-right">
+                <h3>Create Account</h3>
+                <p class="subtitle">Fill in your details to get started</p>
+
+                <div th:if="${registerError}" class="alert alert-danger d-flex align-items-center gap-2">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span th:text="${registerError}"></span>
+                </div>
+
+                <form th:action="@{/register}" th:object="${user}" method="post" id="registerForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="regName">
+                                <i class="bi bi-person me-1"></i>Full Name
+                            </label>
+                            <input type="text" th:field="*{name}" id="regName" class="form-control"
+                                   placeholder="Your full name">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}"
+                                 th:errors="*{name}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="regEmail">
+                                <i class="bi bi-envelope me-1"></i>Email Address
+                            </label>
+                            <input type="email" th:field="*{email}" id="regEmail" class="form-control"
+                                   placeholder="you@example.com">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}"
+                                 th:errors="*{email}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="regPassword">
+                                <i class="bi bi-lock me-1"></i>Password
+                            </label>
+                            <div class="position-relative">
+                                <input type="password" th:field="*{password}" id="regPassword" class="form-control"
+                                       placeholder="Min. 6 characters" oninput="checkPasswordStrength(this.value)">
+                                <button type="button" id="toggleRegPwd"
+                                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--clr-text-muted);cursor:pointer;padding:0;">
+                                    <i class="bi bi-eye" id="toggleRegIcon"></i>
+                                </button>
+                            </div>
+                            <!-- Password strength indicator -->
+                            <div class="password-strength mt-1">
+                                <div class="password-strength-bar strength-0" id="pwdStrengthBar"></div>
+                            </div>
+                            <small id="pwdStrengthLabel" style="color:var(--clr-text-muted); font-size:0.75rem;"></small>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('password')}"
+                                 th:errors="*{password}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="regPhone">
+                                <i class="bi bi-telephone me-1"></i>Phone
+                                <span style="color:var(--clr-text-muted); font-size:0.78rem;">(optional)</span>
+                            </label>
+                            <input type="text" th:field="*{phone}" id="regPhone" class="form-control"
+                                   placeholder="+1 234 567 8900">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="regAddress">
+                                <i class="bi bi-geo-alt me-1"></i>Address
+                                <span style="color:var(--clr-text-muted); font-size:0.78rem;">(optional)</span>
+                            </label>
+                            <textarea th:field="*{address}" id="regAddress" class="form-control" rows="2"
+                                      placeholder="Your address..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-auth" id="registerSubmitBtn">
+                            <i class="bi bi-person-check me-2"></i>Create My Account
+                        </button>
+                    </div>
+                </form>
+
+                <p class="text-center mt-3 mb-0" style="color:var(--clr-text-muted); font-size:0.9rem;">
+                    Already have an account?
+                    <a th:href="@{/login}" style="color:#a78bfa; font-weight:600;">Sign in</a>
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 <footer th:replace="~{fragments/layout :: footer}"></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Password strength checker
+    function checkPasswordStrength(pwd) {
+        var bar = document.getElementById('pwdStrengthBar');
+        var label = document.getElementById('pwdStrengthLabel');
+        var score = 0;
+        if (pwd.length >= 6) score++;
+        if (pwd.length >= 10) score++;
+        if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) score++;
+        if (/[0-9]/.test(pwd) && /[^A-Za-z0-9]/.test(pwd)) score++;
+
+        bar.className = 'password-strength-bar strength-' + score;
+        var labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+        label.textContent = pwd.length > 0 ? labels[score] : '';
+    }
+
+    // Toggle password visibility - register
+    document.getElementById('toggleRegPwd').addEventListener('click', function() {
+        var pwd = document.getElementById('regPassword');
+        var icon = document.getElementById('toggleRegIcon');
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            icon.className = 'bi bi-eye-slash';
+        } else {
+            pwd.type = 'password';
+            icon.className = 'bi bi-eye';
+        }
+    });
+</script>
 </body>
 </html>

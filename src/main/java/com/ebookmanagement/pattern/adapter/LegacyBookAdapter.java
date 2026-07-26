@@ -32,7 +32,7 @@ public class LegacyBookAdapter {
     /**
      * Produces a BookDto for our services.
      * A category id must be supplied because the legacy record
-     * has no equivalent field.
+     * has no equivalent field. 
      */
     public BookDto toBookDto(Long categoryId) {
         BookDto dto = new BookDto();

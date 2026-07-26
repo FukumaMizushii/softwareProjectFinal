@@ -8,13 +8,13 @@ import com.ebookmanagement.dto.BookDto;
  * ============================================================
  * Converts an incompatible LegacyBookRecord into the BookDto that
  * the rest of our application understands. The adapter "translates"
- * between the two shapes:
+ * between the two structures:
  *   bookName     -> title
  *   writer       -> author
  *   priceInCents -> price (dollars)
  *   summary      -> description
  *
- * Thanks to this adapter, we can import books from the old catalog
+ * Thanks to this adapter, we can import books from the legacy catalog
  * WITHOUT changing either the legacy class or our BookDto.
  * ============================================================
  */
@@ -30,7 +30,7 @@ public class LegacyBookAdapter {
     }
 
     /**
-     * Produces a BookDto compatible with our services.
+     * Produces a BookDto for our services.
      * A category id must be supplied because the legacy record
      * has no equivalent field.
      */

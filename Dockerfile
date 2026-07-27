@@ -31,4 +31,5 @@ COPY --from=builder /app/target/ebook-management-system-1.0.0.jar app.jar
 # Railway injects $PORT at runtime; default to 8080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dserver.port=${PORT:-8080}", "-jar", "app.jar"]
+# IMPORTANT: Use shell form (not exec/JSON form) so ${PORT} is expanded at runtime
+ENTRYPOINT ["sh", "-c", "java -Xmx400m -Xms200m -Dserver.port=${PORT:-8080} -jar app.jar"]
